@@ -35,13 +35,13 @@ public class PlayerController {
         return new ResponseEntity<>(playerService.getPlayers(pageable), HttpStatus.OK);
     }
 
-    //Get All Players
+    //Get All Players(without pagination)
     @GetMapping("/all")
     public ResponseEntity<Players> getAllPlayers(){
         return ResponseEntity.ok(playerService.getAllPlayers());
     }
 
-
+    //View Players with isAdmin Parameter
     @GetMapping("/view")
     public ResponseEntity<List<Map<String, String>>> viewPlayers(@RequestParam boolean isAdmin) {
         List<Player> allPlayers = playerService.getAllPlayers().getPlayers();
@@ -59,6 +59,26 @@ public class PlayerController {
 
         return ResponseEntity.ok(response);
     }
+
+    //View Players with Authorization Header
+    @GetMapping("/view1")
+    public ResponseEntity<List<Map<String, String>>> viewPlayersWithHeader(@RequestHeader(value = "X-Admin", defaultValue = "false") boolean isAdmin) {
+        List<Player> allPlayers = playerService.getAllPlayers().getPlayers();
+
+        List<Map<String, String>> response = allPlayers.stream()
+                .map(player -> {
+                    Map<String, String> playerMap = new HashMap<>();
+                    playerMap.put("firstName", player.getFirstName());
+                    if (isAdmin) {
+                        playerMap.put("lastName", player.getLastName());
+                    }
+                    return playerMap;
+                })
+                .toList();
+
+        return ResponseEntity.ok(response);
+    }
+
 
 
     @GetMapping("/{id}")
