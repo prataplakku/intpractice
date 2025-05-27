@@ -8,8 +8,9 @@ public class Player {
 
     @Id
     @Column(name = "PLAYERID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String playerId;
+
 
     @Column(name = "BIRTHYEAR")
     private String birthYear;
@@ -21,7 +22,7 @@ public class Player {
     private String birthDay;
 
     @Column(name = "BIRTHCOUNTRY")
-    private String birthCountry;
+        private String birthCountry;
 
     @Column(name = "BIRTHSTATE")
     private String birthState;

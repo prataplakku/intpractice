@@ -1,5 +1,6 @@
 package com.app.playerservicejava.service.chat;
 
+import com.app.playerservicejava.model.Player;
 import io.github.ollama4j.OllamaAPI;
 import io.github.ollama4j.exceptions.OllamaBaseException;
 import io.github.ollama4j.models.Model;
@@ -40,5 +41,28 @@ public class ChatClientService {
         OllamaResult response = ollamaAPI.generate(model, promptBuilder.build(), raw, new OptionsBuilder().build());
         return response.getResponse();
     }
+
+    public String generatePlayerSummary(Player player){
+        String model = OllamaModelType.TINYLLAMA;
+
+        String prompt = String.format("""
+                Create a short 3 line bio summary for a player with the following details:
+                Name: %s %s
+                Birth: %s, %s, %s
+                Debut: %s
+                Final Game: %s,
+                Bats: %s | Throws: %s
+                """,player.getFirstName(), player.getLastName(), player.getBirthMonth(), player.getBirthDay(),player.getBirthYear(), player.getDebut() , player.getFinalGame(), player.getBats(), player.getThrowStats());
+
+        try{
+            OllamaResult result = ollamaAPI.generate(model, new PromptBuilder().addLine(prompt).build(), false, new OptionsBuilder().build());
+            return result.getResponse();
+        } catch (Exception e){
+            LOGGER.error("Error generating player summary", e);
+            return "Error generating summary: " + e.getMessage();
+        }
+
+    };
+
 
 }
